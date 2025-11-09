@@ -148,6 +148,7 @@ Railway is a modern cloud platform that makes it easy to deploy and manage appli
    - Go to **"Settings"** tab
    - Look for **"Domains"** section
    - You'll see a URL like: `https://grm-robotics-backend.railway.app`
+   web-production-aac1.up.railway.app
    - Copy this URL for later use
 
 ### Step 6: Set Up Custom Domain (Optional)
