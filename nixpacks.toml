@@ -1,5 +1,5 @@
 [phases.setup]
-nixPkgs = ['nodejs_18', 'openssl']
+nixPkgs = ['nodejs_18', 'openssl', 'postgresql']
 
 [phases.install]
 cmds = ['npm ci']
@@ -7,7 +7,7 @@ cmds = ['npm ci']
 [phases.build]
 cmds = [
   'npm run build',
-  'npm run prisma:generate'
+  'PRISMA_CLI_BINARY_TARGETS=debian-openssl-1.1.x npm run prisma:generate'
 ]
 
 [start]
@@ -15,3 +15,4 @@ cmd = 'npm run start'
 
 [variables]
 NODE_ENV = 'production'
+PRISMA_CLI_BINARY_TARGETS = 'debian-openssl-1.1.x'
