@@ -3,8 +3,8 @@
 ## Copy these environment variables to Railway:
 
 ```bash
-# Database (Your actual Neon URL)
-DATABASE_URL=postgresql://neondb_owner:npg_8JpeoAblRS4W@ep-twilight-resonance-a1sqm9xo-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require
+# Database (Your updated Neon URL with channel_binding)
+DATABASE_URL=postgresql://neondb_owner:npg_8JpeoAblRS4W@ep-twilight-resonance-a1sqm9xo-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
 
 # JWT Configuration
 JWT_SECRET=a37e6d68ad1f5ce687ff47d401cec461ac218e5eca9feefcbca8607a548bdb3b79a74a9cd4fdbabcb7e17f13ec1b93892ebb32020af5b51c5c6e45d000e8b261

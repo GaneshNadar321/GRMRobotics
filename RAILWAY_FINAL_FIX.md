@@ -13,7 +13,7 @@
 Add these **EXACT** variables:
 
 ```bash
-DATABASE_URL=postgresql://neondb_owner:npg_8JpeoAblRS4W@ep-twilight-resonance-a1sqm9xo-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require
+DATABASE_URL=postgresql://neondb_owner:npg_8JpeoAblRS4W@ep-twilight-resonance-a1sqm9xo-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
 
 NODE_ENV=production
 PORT=3001
