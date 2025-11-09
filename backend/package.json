@@ -7,7 +7,7 @@
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "build": "tsc",
     "start": "node dist/server.js",
-    "start:prod": "npm run build && npm run prisma:generate && npm run prisma:migrate:safe && npm run start",
+    "start:prod": "npm run prisma:migrate:safe && npm run start",
     "prisma:generate": "OPENSSL_CONF=/dev/null prisma generate",
     "prisma:migrate": "OPENSSL_CONF=/dev/null prisma migrate deploy",
     "prisma:migrate:safe": "OPENSSL_CONF=/dev/null prisma migrate deploy || echo 'Migration completed with warnings'",

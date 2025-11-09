@@ -1,8 +1,7 @@
 // Prisma Schema for GRM Robotics E-Commerce Platform
 
 generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "debian-openssl-1.1.x", "linux-musl"]
+  provider = "prisma-client-js"
 }
 
 datasource db {

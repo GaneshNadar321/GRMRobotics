@@ -1,1 +1,0 @@
-web: cd backend && bash scripts/railway-deploy.sh
