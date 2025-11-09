@@ -8,10 +8,20 @@ import { sendOrderNotification, sendOrderConfirmation } from '../utils/email';
 
 const prisma = new PrismaClient();
 
-const razorpay = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID || '',
-  key_secret: process.env.RAZORPAY_KEY_SECRET || '',
-});
+// Initialize Razorpay only when needed
+const getRazorpayInstance = () => {
+  const keyId = process.env.RAZORPAY_KEY_ID;
+  const keySecret = process.env.RAZORPAY_KEY_SECRET;
+  
+  if (!keyId || !keySecret) {
+    throw new AppError('Razorpay configuration is missing', 500);
+  }
+  
+  return new Razorpay({
+    key_id: keyId,
+    key_secret: keySecret,
+  });
+};
 
 export const createOrder = asyncHandler(async (req: AuthRequest, res: Response) => {
   try {
@@ -123,6 +133,7 @@ export const createOrder = asyncHandler(async (req: AuthRequest, res: Response) 
   // Create Razorpay order (skip if in dev mode with invalid keys)
   let razorpayOrder;
   try {
+    const razorpay = getRazorpayInstance();
     razorpayOrder = await razorpay.orders.create({
       amount: Math.round(total * 100), // Convert to paise
       currency: 'INR',
