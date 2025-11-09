@@ -51,3 +51,5 @@ yarn-error.log*
 
 # Prisma
 prisma/migrations/
+
+RENDER_DEPLOYMENT_GUIDE.md
