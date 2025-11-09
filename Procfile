@@ -1,1 +1,1 @@
-web: cd backend && npm run start:prod
+web: cd backend && bash scripts/railway-deploy.sh
