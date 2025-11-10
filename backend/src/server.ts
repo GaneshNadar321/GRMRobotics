@@ -20,6 +20,7 @@ import contactRoutes from './routes/contact.routes';
 import newsletterRoutes from './routes/newsletter.routes';
 import manualRoutes from './routes/manual.routes';
 import tutorialRoutes from './routes/tutorial.routes';
+import setupRoutes from './routes/setup.routes';
 
 dotenv.config();
 
@@ -102,6 +103,7 @@ app.use('/api/contact', contactRoutes);
 app.use('/api/newsletter', newsletterRoutes);
 app.use('/api/manuals', manualRoutes);
 app.use('/api/tutorials', tutorialRoutes);
+app.use('/api/setup', setupRoutes);
 
 // 404 handler
 app.use((_req, res) => {
