@@ -1,0 +1,2 @@
+# Netlify/Vercel redirects file
+https://www.grmrobotics.com/* https://grmrobotics.com/:splat 301!
