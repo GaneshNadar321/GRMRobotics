@@ -127,7 +127,7 @@
 
         async function createCategories() {
             const resultDiv = document.getElementById('result');
-            
+
             try {
                 const response = await fetch('https://grmrobotics.onrender.com/api/products/create-categories', {
                     method: 'POST',
@@ -135,9 +135,9 @@
                         'Content-Type': 'application/json',
                     }
                 });
-                
+
                 const data = await response.json();
-                
+
                 if (response.ok) {
                     let html = '<strong>✅ Categories created successfully!</strong><br><br>';
                     html += '<div class="credentials">';

@@ -1,10 +1,17 @@
 'use client';
 
 import Script from 'next/script';
+import { useEffect, useState } from 'react';
 import { GA_TRACKING_ID } from '@/lib/analytics';
 
 export default function GoogleAnalytics() {
-  if (!GA_TRACKING_ID) {
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!GA_TRACKING_ID || !isClient) {
     return null;
   }
 
@@ -22,10 +29,7 @@ export default function GoogleAnalytics() {
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', '${GA_TRACKING_ID}', {
-              page_location: window.location.href,
-              page_title: document.title,
-            });
+            gtag('config', '${GA_TRACKING_ID}');
           `,
         }}
       />
