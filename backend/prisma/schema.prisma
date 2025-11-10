@@ -103,6 +103,7 @@ model Product {
   isFeatured      Boolean         @default(false)
   categoryId      String
   tags            String[]
+  specifications  Json?
   metaTitle       String?
   metaDescription String?
   createdAt       DateTime        @default(now())

@@ -30,12 +30,20 @@ export default function NewProductPage() {
     tags: '',
     isFeatured: false,
     isActive: true,
+    specifications: [] as Array<{key: string, value: string}>,
   });
 
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [pdfFiles, setPdfFiles] = useState<File[]>([]);
   const [pdfPreviews, setPdfPreviews] = useState<{name: string, size: number}[]>([]);
+  
+  // Specifications table state
+  const [specRows, setSpecRows] = useState(3);
+  const [specCols, setSpecCols] = useState(2);
+  const [specifications, setSpecifications] = useState<Array<{key: string, value: string}>>([
+    {key: '', value: ''}
+  ]);
 
   const { data: categories } = useQuery({
     queryKey: ['categories'],
@@ -188,6 +196,30 @@ export default function NewProductPage() {
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/(^-|-$)/g, '');
+  };
+
+  // Specifications management functions
+  const addSpecification = () => {
+    setSpecifications([...specifications, {key: '', value: ''}]);
+  };
+
+  const removeSpecification = (index: number) => {
+    setSpecifications(specifications.filter((_, i) => i !== index));
+  };
+
+  const updateSpecification = (index: number, field: 'key' | 'value', value: string) => {
+    const updated = [...specifications];
+    updated[index][field] = value;
+    setSpecifications(updated);
+    setFormData({...formData, specifications: updated});
+  };
+
+  const generateSpecTable = () => {
+    const newSpecs = [];
+    for (let i = 0; i < specRows; i++) {
+      newSpecs.push({key: '', value: ''});
+    }
+    setSpecifications(newSpecs);
   };
 
   if (!isAuthenticated() || user?.role !== 'ADMIN') {
@@ -389,6 +421,93 @@ export default function NewProductPage() {
               />
               <p className="form-help">Comma-separated tags</p>
             </div>
+          </div>
+        </div>
+
+        {/* Product Specifications */}
+        <div className="card">
+          <h2 className="text-xl font-bold mb-4">Product Specifications</h2>
+          
+          <div className="space-y-4">
+            {/* Table Size Controls */}
+            <div className="flex gap-4 items-end">
+              <div className="form-group">
+                <label className="form-label">Number of Specifications</label>
+                <input
+                  type="number"
+                  value={specRows}
+                  onChange={(e) => setSpecRows(parseInt(e.target.value) || 1)}
+                  className="input w-20"
+                  min="1"
+                  max="20"
+                />
+              </div>
+              <button
+                type="button"
+                onClick={generateSpecTable}
+                className="btn btn-secondary"
+              >
+                Generate Table
+              </button>
+              <button
+                type="button"
+                onClick={addSpecification}
+                className="btn btn-secondary"
+              >
+                Add Row
+              </button>
+            </div>
+
+            {/* Specifications Table */}
+            <div className="border rounded-lg overflow-hidden">
+              <table className="w-full">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-4 py-2 text-left font-medium text-gray-700">Specification</th>
+                    <th className="px-4 py-2 text-left font-medium text-gray-700">Value</th>
+                    <th className="px-4 py-2 text-center font-medium text-gray-700">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {specifications.map((spec, index) => (
+                    <tr key={index} className="border-t">
+                      <td className="px-4 py-2">
+                        <input
+                          type="text"
+                          value={spec.key}
+                          onChange={(e) => updateSpecification(index, 'key', e.target.value)}
+                          className="input w-full"
+                          placeholder="e.g., Dimensions, Weight, Battery"
+                        />
+                      </td>
+                      <td className="px-4 py-2">
+                        <input
+                          type="text"
+                          value={spec.value}
+                          onChange={(e) => updateSpecification(index, 'value', e.target.value)}
+                          className="input w-full"
+                          placeholder="e.g., 15cm x 10cm x 5cm"
+                        />
+                      </td>
+                      <td className="px-4 py-2 text-center">
+                        <button
+                          type="button"
+                          onClick={() => removeSpecification(index)}
+                          className="text-red-600 hover:text-red-800"
+                          disabled={specifications.length === 1}
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <p className="form-help">
+              Add product specifications like dimensions, weight, battery life, etc.
+            </p>
           </div>
         </div>
 

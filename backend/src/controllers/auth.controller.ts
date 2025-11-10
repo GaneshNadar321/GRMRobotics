@@ -18,10 +18,10 @@ const BCRYPT_ROUNDS = parseInt(process.env.BCRYPT_ROUNDS || '10');
 const ensureCategories = async () => {
   try {
     const categoryCount = await prisma.category.count();
-    
+
     if (categoryCount === 0) {
       console.log('📦 No categories found. Creating default categories...');
-      
+
       await Promise.all([
         prisma.category.create({
           data: {
@@ -88,7 +88,7 @@ const ensureCategories = async () => {
           },
         }),
       ]);
-      
+
       console.log('✅ Categories created successfully!');
     }
   } catch (error) {
@@ -106,7 +106,7 @@ const ensureAdminUsers = async () => {
 
     if (adminCount === 0) {
       console.log('🔧 No admin users found. Creating default admin users...');
-      
+
       // Create admin users with the credentials you specified
       const adminPassword1 = await bcrypt.hash('GRMRobotics@123', BCRYPT_ROUNDS);
       const adminPassword2 = await bcrypt.hash('GRMRobotics@123', BCRYPT_ROUNDS);
@@ -246,7 +246,7 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
 export const setupAdmin = asyncHandler(async (req: Request, res: Response) => {
   await ensureCategories();
   await ensureAdminUsers();
-  
+
   res.json({
     message: 'Admin setup completed - Categories and admin users created',
     credentials: [
@@ -447,7 +447,7 @@ export const googleAuth = asyncHandler(async (req: Request, res: Response) => {
   try {
     // Verify Google access token and get user info
     const googleResponse = await fetch(`https://www.googleapis.com/oauth2/v2/userinfo?access_token=${accessToken}`);
-    
+
     if (!googleResponse.ok) {
       throw new AppError('Invalid Google access token', 401);
     }
@@ -541,7 +541,7 @@ export const facebookAuth = asyncHandler(async (req: Request, res: Response) => 
   try {
     // Verify Facebook access token and get user info
     const facebookResponse = await fetch(`https://graph.facebook.com/me?fields=id,name,email,first_name,last_name&access_token=${accessToken}`);
-    
+
     if (!facebookResponse.ok) {
       throw new AppError('Invalid Facebook access token', 401);
     }
