@@ -5,48 +5,62 @@ import { asyncHandler, AppError } from '../middleware/errorHandler';
 const prisma = new PrismaClient();
 
 export const getProducts = asyncHandler(async (req: Request, res: Response) => {
-  const {
-    page = '1',
-    limit = '12',
-    category,
-    difficulty,
-    minPrice,
-    maxPrice,
-    search,
-    sortBy = 'newest',
-    inStock,
-  } = req.query;
+  try {
+    const {
+      page = '1',
+      limit = '12',
+      category,
+      difficulty,
+      minPrice,
+      maxPrice,
+      search,
+      sortBy = 'newest',
+      inStock,
+      isFeatured,
+    } = req.query;
 
-  const skip = (parseInt(page as string) - 1) * parseInt(limit as string);
-  const take = parseInt(limit as string);
+    // Validate and parse numeric values with proper error handling
+    const pageNum = Math.max(1, parseInt(page as string) || 1);
+    const limitNum = Math.min(50, Math.max(1, parseInt(limit as string) || 12));
+    const skip = (pageNum - 1) * limitNum;
 
-  const where: any = { isActive: true };
+    const where: any = { isActive: true };
 
-  if (category) {
-    where.category = { slug: category };
-  }
+    if (category) {
+      where.category = { slug: category };
+    }
 
-  if (difficulty) {
-    where.difficulty = difficulty;
-  }
+    if (difficulty && ['BEGINNER', 'INTERMEDIATE', 'ADVANCED'].includes(difficulty as string)) {
+      where.difficulty = difficulty;
+    }
 
-  if (minPrice || maxPrice) {
-    where.price = {};
-    if (minPrice) where.price.gte = parseFloat(minPrice as string);
-    if (maxPrice) where.price.lte = parseFloat(maxPrice as string);
-  }
+    if (minPrice || maxPrice) {
+      where.price = {};
+      if (minPrice) {
+        const minPriceNum = parseFloat(minPrice as string);
+        if (!isNaN(minPriceNum)) where.price.gte = minPriceNum;
+      }
+      if (maxPrice) {
+        const maxPriceNum = parseFloat(maxPrice as string);
+        if (!isNaN(maxPriceNum)) where.price.lte = maxPriceNum;
+      }
+    }
 
-  if (search) {
-    where.OR = [
-      { name: { contains: search as string, mode: 'insensitive' } },
-      { description: { contains: search as string, mode: 'insensitive' } },
-      { tags: { has: search as string } },
-    ];
-  }
+    if (search) {
+      where.OR = [
+        { name: { contains: search as string, mode: 'insensitive' } },
+        { description: { contains: search as string, mode: 'insensitive' } },
+        { tags: { has: search as string } },
+      ];
+    }
 
-  if (inStock === 'true') {
-    where.stock = { gt: 0 };
-  }
+    if (inStock === 'true') {
+      where.stock = { gt: 0 };
+    }
+
+    if (isFeatured === 'true') {
+      where.isFeatured = true;
+    }
 
   // Handle sorting options
   let orderByClause: any = { createdAt: 'desc' }; // default
@@ -76,26 +90,26 @@ export const getProducts = asyncHandler(async (req: Request, res: Response) => {
       orderByClause = { createdAt: 'desc' };
   }
 
-  const [products, total] = await Promise.all([
-    prisma.product.findMany({
-      where,
-      skip,
-      take,
-      orderBy: orderByClause,
-      include: {
-        category: true,
-        images: {
-          where: { isPrimary: true },
-          take: 1,
+    const [products, total] = await Promise.all([
+      prisma.product.findMany({
+        where,
+        skip,
+        take: limitNum,
+        orderBy: orderByClause,
+        include: {
+          category: true,
+          images: {
+            where: { isPrimary: true },
+            take: 1,
+          },
+          reviews: {
+            where: { isApproved: true },
+            select: { rating: true },
+          },
         },
-        reviews: {
-          where: { isApproved: true },
-          select: { rating: true },
-        },
-      },
-    }),
-    prisma.product.count({ where }),
-  ]);
+      }),
+      prisma.product.count({ where }),
+    ]);
 
   let productsWithRatings = products.map(product => {
     const ratings = product.reviews.map(r => r.rating);
@@ -116,15 +130,22 @@ export const getProducts = asyncHandler(async (req: Request, res: Response) => {
     productsWithRatings = productsWithRatings.sort((a, b) => b.averageRating - a.averageRating);
   }
 
-  res.json({
-    products: productsWithRatings,
-    pagination: {
-      page: parseInt(page as string),
-      limit: parseInt(limit as string),
-      total,
-      pages: Math.ceil(total / parseInt(limit as string)),
-    },
-  });
+    res.json({
+      products: productsWithRatings,
+      pagination: {
+        page: pageNum,
+        limit: limitNum,
+        total,
+        pages: Math.ceil(total / limitNum),
+      },
+    });
+  } catch (error) {
+    console.error('Error fetching products:', error);
+    res.status(500).json({ 
+      error: 'Failed to fetch products',
+      message: error instanceof Error ? error.message : 'Unknown error'
+    });
+  }
 });
 
 export const getProductById = asyncHandler(async (req: Request, res: Response) => {

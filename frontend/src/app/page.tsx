@@ -12,7 +12,7 @@ export default function HomePage() {
       <OrganizationSchema
         name="GRM Robotics"
         url={baseUrl}
-        logo={`${baseUrl}/logo.jpg`}
+        logo={`${baseUrl}/LOGO.jpeg`}
         description="Student-friendly robotics kits with LEGO-style components, complete with video tutorials and user manuals for hands-on STEM learning."
         contactPoint={{
           telephone: "+91-XXXXXXXXXX",

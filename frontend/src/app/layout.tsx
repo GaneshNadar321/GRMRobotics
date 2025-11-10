@@ -16,10 +16,11 @@ export const metadata: Metadata = {
   description: 'Build, learn, and innovate with LEGO-style robotics kits. Complete with video tutorials and user manuals.',
   keywords: 'robotics, education, STEM, learning kits, programming',
   icons: {
-    icon: '/favicon.svg',
-    shortcut: '/favicon.svg',
-    apple: '/logo.jpg',
+    icon: '/favicon.ico',
+    shortcut: '/favicon.ico',
+    apple: '/LOGO.jpeg',
   },
+  manifest: '/manifest.json',
   openGraph: {
     title: 'GRM Robotics',
     description: 'Student-friendly robotics kits with video tutorials',
