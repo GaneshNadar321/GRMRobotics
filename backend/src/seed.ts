@@ -78,59 +78,37 @@ async function main() {
 
   console.log('✅ Categories created');
 
-  // Create users
-  const hashedPassword = await bcrypt.hash('Admin123!', 10);
-  const userPassword = await bcrypt.hash('User123!', 10);
+  // Create admin users with new credentials
+  const adminPassword1 = await bcrypt.hash('GRMRobotics@123', 10);
+  const adminPassword2 = await bcrypt.hash('GRMRobotics@123', 10);
 
   const users = await Promise.all([
     prisma.user.create({
       data: {
-        email: 'admin@grmrobotics.com',
-        password: hashedPassword,
-        firstName: 'Admin',
-        lastName: 'User',
+        email: 'infogrmrobotics@gmail.com',
+        password: adminPassword1,
+        firstName: 'GRM',
+        lastName: 'Admin',
         role: 'ADMIN',
         isEmailVerified: true,
       },
     }),
     prisma.user.create({
       data: {
-        email: 'manager@grmrobotics.com',
-        password: hashedPassword,
-        firstName: 'Manager',
-        lastName: 'User',
+        email: 'grmrobotic@gmail.com',
+        password: adminPassword2,
+        firstName: 'GRM',
+        lastName: 'Manager',
         role: 'ADMIN',
-        isEmailVerified: true,
-      },
-    }),
-    prisma.user.create({
-      data: {
-        email: 'john@example.com',
-        password: userPassword,
-        firstName: 'John',
-        lastName: 'Doe',
-        phone: '+919876543210',
-        role: 'USER',
-        isEmailVerified: true,
-      },
-    }),
-    prisma.user.create({
-      data: {
-        email: 'jane@example.com',
-        password: userPassword,
-        firstName: 'Jane',
-        lastName: 'Smith',
-        phone: '+919876543211',
-        role: 'USER',
         isEmailVerified: true,
       },
     }),
   ]);
 
-  // Create carts for regular users
+  // Create carts for admin users
   await Promise.all([
-    prisma.cart.create({ data: { userId: users[2].id } }),
-    prisma.cart.create({ data: { userId: users[3].id } }),
+    prisma.cart.create({ data: { userId: users[0].id } }),
+    prisma.cart.create({ data: { userId: users[1].id } }),
   ]);
 
   console.log('✅ Users and carts created');
