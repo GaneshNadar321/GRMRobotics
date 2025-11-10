@@ -7,6 +7,7 @@ const router = Router();
 
 router.get('/', productController.getProducts);
 router.get('/categories', productController.getCategories);
+router.post('/create-categories', productController.createCategories);
 router.get('/:id', productController.getProductById);
 router.get('/:id/tutorials', productController.getProductTutorials);
 router.get('/:id/manuals', productController.getProductManuals);

@@ -347,6 +347,82 @@ export const addManual = asyncHandler(async (req: Request, res: Response) => {
 });
 
 export const getCategories = asyncHandler(async (_req: Request, res: Response) => {
+  // Ensure categories exist before fetching
+  const categoryCount = await prisma.category.count();
+  
+  if (categoryCount === 0) {
+    console.log('📦 No categories found. Creating default categories...');
+    
+    await Promise.all([
+      prisma.category.create({
+        data: {
+          name: 'Ground Robots',
+          slug: 'ground-robots',
+          description: 'Land-based robots including wheeled and tracked vehicles',
+          isActive: true,
+        },
+      }),
+      prisma.category.create({
+        data: {
+          name: 'Aerial Robots',
+          slug: 'aerial-robots',
+          description: 'Flying robots and drones for aerial applications',
+          isActive: true,
+        },
+      }),
+      prisma.category.create({
+        data: {
+          name: 'UAV (Drones)',
+          slug: 'uav-drones',
+          description: 'Unmanned Aerial Vehicles and drone kits',
+          isActive: true,
+        },
+      }),
+      prisma.category.create({
+        data: {
+          name: 'Beginner Kits',
+          slug: 'beginner-kits',
+          description: 'Perfect for students just starting their robotics journey',
+          isActive: true,
+        },
+      }),
+      prisma.category.create({
+        data: {
+          name: 'Intermediate Kits',
+          slug: 'intermediate-kits',
+          description: 'For students ready to take on more complex challenges',
+          isActive: true,
+        },
+      }),
+      prisma.category.create({
+        data: {
+          name: 'Advanced Kits',
+          slug: 'advanced-kits',
+          description: 'Professional-grade robotics kits for advanced learners',
+          isActive: true,
+        },
+      }),
+      prisma.category.create({
+        data: {
+          name: 'Sensors & Components',
+          slug: 'sensors-components',
+          description: 'Individual sensors and electronic components',
+          isActive: true,
+        },
+      }),
+      prisma.category.create({
+        data: {
+          name: 'Accessories',
+          slug: 'accessories',
+          description: 'Batteries, cables, and other accessories',
+          isActive: true,
+        },
+      }),
+    ]);
+    
+    console.log('✅ Categories created successfully!');
+  }
+
   const categories = await prisma.category.findMany({
     where: { isActive: true },
     orderBy: { name: 'asc' },
@@ -359,6 +435,90 @@ export const getCategories = asyncHandler(async (_req: Request, res: Response) =
   });
 
   res.json(categories);
+});
+
+// Manual category creation endpoint
+export const createCategories = asyncHandler(async (_req: Request, res: Response) => {
+  try {
+    // Delete existing categories first (optional)
+    await prisma.category.deleteMany({});
+    
+    // Create all categories
+    const categories = await Promise.all([
+      prisma.category.create({
+        data: {
+          name: 'Ground Robots',
+          slug: 'ground-robots',
+          description: 'Land-based robots including wheeled and tracked vehicles',
+          isActive: true,
+        },
+      }),
+      prisma.category.create({
+        data: {
+          name: 'Aerial Robots',
+          slug: 'aerial-robots',
+          description: 'Flying robots and drones for aerial applications',
+          isActive: true,
+        },
+      }),
+      prisma.category.create({
+        data: {
+          name: 'UAV (Drones)',
+          slug: 'uav-drones',
+          description: 'Unmanned Aerial Vehicles and drone kits',
+          isActive: true,
+        },
+      }),
+      prisma.category.create({
+        data: {
+          name: 'Beginner Kits',
+          slug: 'beginner-kits',
+          description: 'Perfect for students just starting their robotics journey',
+          isActive: true,
+        },
+      }),
+      prisma.category.create({
+        data: {
+          name: 'Intermediate Kits',
+          slug: 'intermediate-kits',
+          description: 'For students ready to take on more complex challenges',
+          isActive: true,
+        },
+      }),
+      prisma.category.create({
+        data: {
+          name: 'Advanced Kits',
+          slug: 'advanced-kits',
+          description: 'Professional-grade robotics kits for advanced learners',
+          isActive: true,
+        },
+      }),
+      prisma.category.create({
+        data: {
+          name: 'Sensors & Components',
+          slug: 'sensors-components',
+          description: 'Individual sensors and electronic components',
+          isActive: true,
+        },
+      }),
+      prisma.category.create({
+        data: {
+          name: 'Accessories',
+          slug: 'accessories',
+          description: 'Batteries, cables, and other accessories',
+          isActive: true,
+        },
+      }),
+    ]);
+    
+    res.json({
+      message: 'Categories created successfully',
+      categories: categories.map(cat => ({ id: cat.id, name: cat.name, slug: cat.slug }))
+    });
+  } catch (error) {
+    console.error('Error creating categories:', error);
+    res.status(500).json({ error: 'Failed to create categories' });
+  }
 });
 
 export const uploadProductImages = asyncHandler(async (req: Request, res: Response) => {
