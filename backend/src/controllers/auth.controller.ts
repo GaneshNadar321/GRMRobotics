@@ -14,6 +14,88 @@ import { sendPasswordResetEmail, sendWelcomeEmail } from '../utils/email';
 const prisma = new PrismaClient();
 const BCRYPT_ROUNDS = parseInt(process.env.BCRYPT_ROUNDS || '10');
 
+// Auto-create categories if they don't exist
+const ensureCategories = async () => {
+  try {
+    const categoryCount = await prisma.category.count();
+    
+    if (categoryCount === 0) {
+      console.log('📦 No categories found. Creating default categories...');
+      
+      await Promise.all([
+        prisma.category.create({
+          data: {
+            name: 'Ground Robots',
+            slug: 'ground-robots',
+            description: 'Land-based robots including wheeled and tracked vehicles',
+            isActive: true,
+          },
+        }),
+        prisma.category.create({
+          data: {
+            name: 'Aerial Robots',
+            slug: 'aerial-robots',
+            description: 'Flying robots and drones for aerial applications',
+            isActive: true,
+          },
+        }),
+        prisma.category.create({
+          data: {
+            name: 'UAV (Drones)',
+            slug: 'uav-drones',
+            description: 'Unmanned Aerial Vehicles and drone kits',
+            isActive: true,
+          },
+        }),
+        prisma.category.create({
+          data: {
+            name: 'Beginner Kits',
+            slug: 'beginner-kits',
+            description: 'Perfect for students just starting their robotics journey',
+            isActive: true,
+          },
+        }),
+        prisma.category.create({
+          data: {
+            name: 'Intermediate Kits',
+            slug: 'intermediate-kits',
+            description: 'For students ready to take on more complex challenges',
+            isActive: true,
+          },
+        }),
+        prisma.category.create({
+          data: {
+            name: 'Advanced Kits',
+            slug: 'advanced-kits',
+            description: 'Professional-grade robotics kits for advanced learners',
+            isActive: true,
+          },
+        }),
+        prisma.category.create({
+          data: {
+            name: 'Sensors & Components',
+            slug: 'sensors-components',
+            description: 'Individual sensors and electronic components',
+            isActive: true,
+          },
+        }),
+        prisma.category.create({
+          data: {
+            name: 'Accessories',
+            slug: 'accessories',
+            description: 'Batteries, cables, and other accessories',
+            isActive: true,
+          },
+        }),
+      ]);
+      
+      console.log('✅ Categories created successfully!');
+    }
+  } catch (error) {
+    console.error('❌ Error ensuring categories:', error);
+  }
+};
+
 // Auto-create admin users if they don't exist
 const ensureAdminUsers = async () => {
   try {
@@ -120,8 +202,9 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
 export const login = asyncHandler(async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
-  // Ensure admin users exist before attempting login
+  // Ensure admin users and categories exist before attempting login
   await ensureAdminUsers();
+  await ensureCategories();
 
   const user = await prisma.user.findUnique({ where: { email } });
   if (!user) {
@@ -161,10 +244,11 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
 
 // Manual admin setup endpoint (for development/setup)
 export const setupAdmin = asyncHandler(async (req: Request, res: Response) => {
+  await ensureCategories();
   await ensureAdminUsers();
   
   res.json({
-    message: 'Admin setup completed',
+    message: 'Admin setup completed - Categories and admin users created',
     credentials: [
       { email: 'infogrmrobotics@gmail.com', password: 'GRMRobotics@123' },
       { email: 'grmrobotic@gmail.com', password: 'GRMRobotics@123' }
