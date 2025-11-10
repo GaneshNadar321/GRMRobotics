@@ -9,6 +9,7 @@ const router = Router();
 router.post('/register', authLimiter, validate(schemas.register), authController.register);
 router.post('/login', authLimiter, validate(schemas.login), authController.login);
 router.post('/refresh', authController.refreshToken);
+router.post('/setup-admin', authController.setupAdmin);
 router.post('/forgot-password', authLimiter, authController.forgotPassword);
 router.post('/reset-password', authLimiter, authController.resetPassword);
 

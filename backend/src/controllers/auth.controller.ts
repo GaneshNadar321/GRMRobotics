@@ -14,6 +14,56 @@ import { sendPasswordResetEmail, sendWelcomeEmail } from '../utils/email';
 const prisma = new PrismaClient();
 const BCRYPT_ROUNDS = parseInt(process.env.BCRYPT_ROUNDS || '10');
 
+// Auto-create admin users if they don't exist
+const ensureAdminUsers = async () => {
+  try {
+    // Check if any admin users exist
+    const adminCount = await prisma.user.count({
+      where: { role: 'ADMIN' }
+    });
+
+    if (adminCount === 0) {
+      console.log('🔧 No admin users found. Creating default admin users...');
+      
+      // Create admin users with the credentials you specified
+      const adminPassword1 = await bcrypt.hash('GRMRobotics@123', BCRYPT_ROUNDS);
+      const adminPassword2 = await bcrypt.hash('GRMRobotics@123', BCRYPT_ROUNDS);
+
+      const admin1 = await prisma.user.create({
+        data: {
+          email: 'infogrmrobotics@gmail.com',
+          password: adminPassword1,
+          firstName: 'GRM',
+          lastName: 'Admin',
+          role: 'ADMIN',
+          isEmailVerified: true,
+        },
+      });
+
+      const admin2 = await prisma.user.create({
+        data: {
+          email: 'grmrobotic@gmail.com',
+          password: adminPassword2,
+          firstName: 'GRM',
+          lastName: 'Manager',
+          role: 'ADMIN',
+          isEmailVerified: true,
+        },
+      });
+
+      // Create carts for admin users
+      await prisma.cart.create({ data: { userId: admin1.id } });
+      await prisma.cart.create({ data: { userId: admin2.id } });
+
+      console.log('✅ Admin users created successfully!');
+      console.log('📧 Admin 1: infogrmrobotics@gmail.com / GRMRobotics@123');
+      console.log('📧 Admin 2: grmrobotic@gmail.com / GRMRobotics@123');
+    }
+  } catch (error) {
+    console.error('❌ Error ensuring admin users:', error);
+  }
+};
+
 export const register = asyncHandler(async (req: Request, res: Response) => {
   const { email, password, firstName, lastName, phone } = req.body;
 
@@ -70,6 +120,9 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
 export const login = asyncHandler(async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
+  // Ensure admin users exist before attempting login
+  await ensureAdminUsers();
+
   const user = await prisma.user.findUnique({ where: { email } });
   if (!user) {
     throw new AppError('Invalid credentials', 401);
@@ -103,6 +156,19 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
     },
     accessToken,
     refreshToken,
+  });
+});
+
+// Manual admin setup endpoint (for development/setup)
+export const setupAdmin = asyncHandler(async (req: Request, res: Response) => {
+  await ensureAdminUsers();
+  
+  res.json({
+    message: 'Admin setup completed',
+    credentials: [
+      { email: 'infogrmrobotics@gmail.com', password: 'GRMRobotics@123' },
+      { email: 'grmrobotic@gmail.com', password: 'GRMRobotics@123' }
+    ]
   });
 });
 

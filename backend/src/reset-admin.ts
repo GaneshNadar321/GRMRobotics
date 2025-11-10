@@ -13,8 +13,7 @@ async function resetAdmin() {
         OR: [
           { email: 'infogrmrobotics@gmail.com' },
           { email: 'grmrobotic@gmail.com' },
-          { email: 'admin@grmrobotics.com' },
-          { email: 'manager@grmrobotics.com' }
+          
         ]
       }
     });
