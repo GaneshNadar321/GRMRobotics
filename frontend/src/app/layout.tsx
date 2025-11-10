@@ -11,10 +11,13 @@ import GoogleAnalytics from '@/components/GoogleAnalytics';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
   title: 'GRM Robotics - Student-Friendly Robotics Kits',
   description: 'Build, learn, and innovate with LEGO-style robotics kits. Complete with video tutorials and user manuals.',
   keywords: 'robotics, education, STEM, learning kits, programming',
+  icons: {
+    icon: '/icon',
+  },
   openGraph: {
     title: 'GRM Robotics',
     description: 'Student-friendly robotics kits with video tutorials',
