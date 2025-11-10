@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "build": "tsc",
-    "start": "npm run prisma:generate && node dist/server.js",
+    "start": "node dist/server.js",
     "start:prod": "npm run build && npm run start",
     "prisma:generate": "OPENSSL_CONF=/dev/null prisma generate",
     "prisma:migrate": "OPENSSL_CONF=/dev/null prisma migrate deploy",
@@ -16,7 +16,6 @@
     "prisma:migrate:dev": "prisma migrate dev",
     "prisma:studio": "prisma studio",
     "seed": "ts-node src/seed.ts",
-    "reset-admin": "ts-node src/reset-admin.ts",
     "test:db": "node test-db-connection.js",
     "test": "jest --coverage",
     "test:watch": "jest --watch",
@@ -54,6 +53,7 @@
     "nodemailer": "^7.0.10",
     "prisma": "^5.7.0",
     "razorpay": "^2.9.2",
+    "ts-node": "^10.9.2",
     "typescript": "^5.3.3",
     "validator": "^13.11.0",
     "winston": "^3.11.0",
@@ -69,7 +69,6 @@
     "prettier": "^3.1.1",
     "supertest": "^6.3.3",
     "ts-jest": "^29.1.1",
-    "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0"
   }
 }
