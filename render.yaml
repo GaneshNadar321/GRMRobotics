@@ -5,7 +5,7 @@ services:
     env: node
     plan: free
     buildCommand: cd backend && npm install && npm run build && npm run prisma:generate
-    startCommand: cd backend && npm run prisma:deploy && npm start
+    startCommand: cd backend && npm start
     envVars:
       - key: DATABASE_URL
         value: postgresql://neondb_owner:npg_8JpeoAblRS4W@ep-twilight-resonance-a1sqm9xo-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
@@ -50,7 +50,7 @@ services:
       - key: NODE_ENV
         value: production
       - key: FRONTEND_URL
-        sync: false
+        value: https://grmrobotics.com
       - key: BCRYPT_ROUNDS
         value: "10"
       - key: RATE_LIMIT_WINDOW_MS
@@ -67,9 +67,9 @@ services:
     startCommand: cd frontend && npm start
     envVars:
       - key: NEXT_PUBLIC_API_URL
-        sync: false
+        value: https://grmrobotics.onrender.com/api
       - key: NEXT_PUBLIC_SITE_URL
-        sync: false
+        value: https://grmrobotics.com
       - key: NEXT_PUBLIC_RAZORPAY_KEY_ID
         value: rzp_test_Rcs02GVJSBCdpe
       - key: NEXT_PUBLIC_GOOGLE_CLIENT_ID

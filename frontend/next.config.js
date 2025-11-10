@@ -38,6 +38,18 @@ const nextConfig = {
         destination: '/',
         permanent: true,
       },
+      // Redirect www to non-www
+      {
+        source: '/:path*',
+        has: [
+          {
+            type: 'host',
+            value: 'www.grmrobotics.com',
+          },
+        ],
+        destination: 'https://grmrobotics.com/:path*',
+        permanent: true,
+      },
     ];
   },
   

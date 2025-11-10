@@ -83,34 +83,24 @@
         <p>Use this page to create or reset admin users for your GRM Robotics website.</p>
 
         <form id="setupForm">
-            <input type="password" id="setupKey" placeholder="Enter Setup Key: GRMSetup2024!" required>
-
             <button type="button" onclick="setupAdmin()">Create Admin Users</button>
-            <button type="button" onclick="resetAdmin()">Reset Admin Passwords</button>
         </form>
 
         <div id="result" class="result"></div>
     </div>
 
     <script>
-        const API_URL = 'https://grmrobotics.onrender.com/api/setup';
+        const API_URL = 'https://grmrobotics.onrender.com/api/auth';
 
         async function setupAdmin() {
-            const setupKey = document.getElementById('setupKey').value;
             const resultDiv = document.getElementById('result');
-
-            if (!setupKey) {
-                showResult('Please enter the setup key', 'error');
-                return;
-            }
 
             try {
                 const response = await fetch(`${API_URL}/setup-admin`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ setupKey })
+                    }
                 });
 
                 const data = await response.json();
@@ -118,54 +108,21 @@
                 if (response.ok) {
                     let html = '<strong>✅ Admin users created successfully!</strong><br><br>';
                     html += '<div class="credentials">';
-                    data.admins.forEach(admin => {
-                        html += `Email: ${admin.email}<br>Password: ${admin.password}<br><br>`;
+                    data.credentials.forEach(cred => {
+                        html += `Email: ${cred.email}<br>Password: ${cred.password}<br><br>`;
                     });
                     html += '</div>';
                     html += '<p>You can now login to the admin panel with these credentials.</p>';
                     showResult(html, 'success');
                 } else {
-                    showResult(`❌ Error: ${data.error}`, 'error');
+                    showResult(`❌ Error: ${data.message || 'Setup failed'}`, 'error');
                 }
             } catch (error) {
                 showResult(`❌ Network error: ${error.message}`, 'error');
             }
         }
 
-        async function resetAdmin() {
-            const setupKey = document.getElementById('setupKey').value;
 
-            if (!setupKey) {
-                showResult('Please enter the setup key', 'error');
-                return;
-            }
-
-            try {
-                const response = await fetch(`${API_URL}/reset-admin`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ setupKey })
-                });
-
-                const data = await response.json();
-
-                if (response.ok) {
-                    let html = '<strong>✅ Admin passwords reset successfully!</strong><br><br>';
-                    html += '<div class="credentials">';
-                    data.credentials.forEach(cred => {
-                        html += `Email: ${cred.email}<br>Password: ${cred.password}<br><br>`;
-                    });
-                    html += '</div>';
-                    showResult(html, 'success');
-                } else {
-                    showResult(`❌ Error: ${data.error}`, 'error');
-                }
-            } catch (error) {
-                showResult(`❌ Network error: ${error.message}`, 'error');
-            }
-        }
 
         function showResult(message, type) {
             const resultDiv = document.getElementById('result');
