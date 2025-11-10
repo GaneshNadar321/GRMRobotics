@@ -16,6 +16,7 @@
     "prisma:migrate:dev": "prisma migrate dev",
     "prisma:studio": "prisma studio",
     "seed": "ts-node src/seed.ts",
+    "reset-admin": "ts-node src/reset-admin.ts",
     "test:db": "node test-db-connection.js",
     "test": "jest --coverage",
     "test:watch": "jest --watch",
