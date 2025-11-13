@@ -146,14 +146,6 @@ export const getProducts = asyncHandler(async (req: Request, res: Response) => {
       message: error instanceof Error ? error.message : 'Unknown error'
     });
   }
-    });
-  } catch (error) {
-    console.error('Error fetching products:', error);
-    res.status(500).json({ 
-      error: 'Failed to fetch products',
-      message: error instanceof Error ? error.message : 'Unknown error'
-    });
-  }
 });
 
 export const getProductById = asyncHandler(async (req: Request, res: Response) => {
