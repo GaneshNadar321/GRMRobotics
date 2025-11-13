@@ -16,8 +16,8 @@ export const metadata: Metadata = {
   description: 'Build, learn, and innovate with LEGO-style robotics kits. Complete with video tutorials and user manuals.',
   keywords: 'robotics, education, STEM, learning kits, programming',
   icons: {
-    icon: '/LOGO.jpeg',
-    shortcut: '/LOGO.jpeg',
+    icon: '/favicon.ico',
+    shortcut: '/favicon.ico',
     apple: '/LOGO.jpeg',
   },
   manifest: '/manifest.json',

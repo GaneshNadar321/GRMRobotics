@@ -18,6 +18,7 @@ import webhookRoutes from './routes/webhook.routes';
 import wishlistRoutes from './routes/wishlist.routes';
 import contactRoutes from './routes/contact.routes';
 import newsletterRoutes from './routes/newsletter.routes';
+import { handleMissingImages } from './middleware/imageHandler';
 import manualRoutes from './routes/manual.routes';
 import tutorialRoutes from './routes/tutorial.routes';
 import setupRoutes from './routes/setup.routes';
@@ -62,6 +63,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Static files for uploads
+app.use('/uploads', handleMissingImages);
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 // Request logging
