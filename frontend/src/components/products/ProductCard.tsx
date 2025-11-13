@@ -32,7 +32,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
   // Use uploaded image or fallback to placeholder
   const primaryImage = product.images?.[0]?.url
-    ? `http://localhost:3001${product.images[0].url}`
+    ? `${process.env.NEXT_PUBLIC_API_URL?.replace('/api', '')}${product.images[0].url}`
     : `https://placehold.co/400x300/0ea5e9/white?text=${encodeURIComponent(product.name)}`;
 
   const addToWishlistMutation = useMutation({

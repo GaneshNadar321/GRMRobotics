@@ -297,7 +297,7 @@ export default function AdminOrderDetailPage() {
                   <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden">
                     {item.product.images?.[0] ? (
                       <img
-                        src={item.product.images[0].url}
+                        src={`${process.env.NEXT_PUBLIC_API_URL?.replace('/api', '')}${item.product.images[0].url}`}
                         alt={item.product.images[0].altText || item.productName}
                         className="w-full h-full object-cover"
                       />

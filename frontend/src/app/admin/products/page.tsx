@@ -178,7 +178,7 @@ export default function AdminProductsPage() {
                         <div className="w-14 h-14 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl flex items-center justify-center">
                           {product.images?.[0] ? (
                             <img 
-                              src={product.images[0].url} 
+                              src={`${process.env.NEXT_PUBLIC_API_URL?.replace('/api', '')}${product.images[0].url}`} 
                               alt={product.name}
                               className="w-full h-full object-cover rounded-xl"
                             />

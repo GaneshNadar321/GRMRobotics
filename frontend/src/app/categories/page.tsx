@@ -174,7 +174,7 @@ export default function CategoriesPage() {
                     <div className="relative h-48 bg-gray-100 rounded-lg mb-3 overflow-hidden">
                       {product.images?.[0]?.url ? (
                         <Image
-                          src={`http://localhost:3001${product.images[0].url}`}
+                          src={`${process.env.NEXT_PUBLIC_API_URL?.replace('/api', '')}${product.images[0].url}`}
                           alt={product.name}
                           fill
                           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"

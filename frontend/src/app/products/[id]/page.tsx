@@ -375,7 +375,7 @@ export default function ProductDetailPage() {
                 {product.images && product.images.length > 0 ? (
                   <>
                     <Image
-                      src={`http://localhost:3001${product.images[selectedImage]?.url || product.images[0].url}`}
+                      src={`${process.env.NEXT_PUBLIC_API_URL?.replace('/api', '')}${product.images[selectedImage]?.url || product.images[0].url}`}
                       alt={product.name}
                       fill
                       sizes="(max-width: 1024px) 100vw, 50vw"
@@ -410,7 +410,7 @@ export default function ProductDetailPage() {
                       }`}
                   >
                     <Image
-                      src={`http://localhost:3001${image.url}`}
+                      src={`${process.env.NEXT_PUBLIC_API_URL?.replace('/api', '')}${image.url}`}
                       alt={`${product.name} - Image ${index + 1}`}
                       fill
                       sizes="64px"
